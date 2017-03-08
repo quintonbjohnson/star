@@ -141,6 +141,11 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * Create the options menu found in the top right of the activity
+     * @param menu the menu to be added
+     * @return if the menu has been successfully added
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
@@ -149,6 +154,11 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * When a user selects an option in the menu
+     * @param item the item the user has selected
+     * @return if the user has successfully used an item
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
