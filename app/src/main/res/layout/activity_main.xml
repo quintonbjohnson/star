@@ -71,24 +71,90 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
             android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:fillViewport="false">
 
             <LinearLayout
                 android:id="@+id/presetValues"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:dividerPadding="10dp"
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/test"
-                    android:layout_width="100dp"
+                    android:id="@+id/yes"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
                     android:background="@drawable/roundedshapebtn"
                     android:elevation="2dp"
                     android:onClick="presetClicked"
-                    android:text="test"
+                    android:text="Yes"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/roundedshapebtn"
+                    android:elevation="2dp"
+                    android:onClick="presetClicked"
+                    android:text="No"
                     android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/thank"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/roundedshapebtn"
+                    android:elevation="2dp"
+                    android:onClick="presetClicked"
+                    android:text="Thank you"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/when"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/roundedshapebtn"
+                    android:elevation="2dp"
+                    android:onClick="presetClicked"
+                    android:text="When"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/where"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/roundedshapebtn"
+                    android:elevation="2dp"
+                    android:onClick="presetClicked"
+                    android:text="Where"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/please"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/roundedshapebtn"
+                    android:elevation="2dp"
+                    android:onClick="presetClicked"
+                    android:text="Please say that again"
+                    android:textColor="@color/white" />
+
             </LinearLayout>
 
         </HorizontalScrollView>

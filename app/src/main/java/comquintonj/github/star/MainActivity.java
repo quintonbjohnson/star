@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
         Button presetButton = (Button) findViewById(v.getId());
         String toSpeak = presetButton.getText().toString();
         sayIt(toSpeak);
+        sendMessage(toSpeak, true);
     }
 
 
