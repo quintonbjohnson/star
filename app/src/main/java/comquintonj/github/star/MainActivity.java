@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 
 
 import java.util.List;
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
                 sayIt(toSpeak);
             }
         });
+
+
     }
 
     /**
@@ -97,6 +100,14 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return true;
+    }
+
+
+    public void presetClicked(View v){
+        Button presetButton = (Button) findViewById(v.getId());
+        String toSpeak = presetButton.getText().toString();
+        sayIt(toSpeak);
+
     }
 
 }
