@@ -66,10 +66,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Set scrolling adapter for the ListView holding chats
         chatList.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         chatList.setAdapter(chatAdapter);
 
-        //to scroll the list view to bottom on data change
+        // Scroll the list view to bottom on data change
         chatAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
@@ -79,10 +80,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private boolean sendMessage(String spoken, boolean whoSent) {
+    /**
+     * Show a message in the ListView of chats
+     * @param spoken what has been said
+     * @param whoSent whether or not the user has sent the message
+     */
+    private void sendMessage(String spoken, boolean whoSent) {
         chatAdapter.add(new Message(whoSent, spoken));
         inputText.setText("");
-        return true;
     }
 
     /**
@@ -105,6 +110,17 @@ public class MainActivity extends AppCompatActivity {
         // Start the activity, the intent will be populated with the speech text
         startActivityForResult(intent, SPEECH_REQUEST_CODE);
     }
+
+    /**
+     * Decide which preset response was clicked
+     * @param v the Button that was clicked
+     */
+    public void presetClicked(View v){
+        Button presetButton = (Button) findViewById(v.getId());
+        String toSpeak = presetButton.getText().toString();
+        sayIt(toSpeak);
+    }
+
 
     /**
      * On result of the Google Speech Recognizer, use the input to transmit to the user
@@ -145,13 +161,4 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
-    public void presetClicked(View v){
-        Button presetButton = (Button) findViewById(v.getId());
-        String toSpeak = presetButton.getText().toString();
-        sayIt(toSpeak);
-    }
-
-
 }

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-class ChatViewAdapter extends ArrayAdapter<Message> {
+public class ChatViewAdapter extends ArrayAdapter<Message> {
 
     private List<Message> chatMessageList = new ArrayList<Message>();
 
