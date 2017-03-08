@@ -18,6 +18,6 @@
         android:paddingRight="10dp"
         android:paddingTop="5dp"
         android:text="Sample"
-        android:textColor="@color/white"
+        android:textColor="@android:color/black"
         android:textSize="18sp" />
 </LinearLayout>
