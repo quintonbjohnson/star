@@ -1,0 +1,4 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/microphone"
+        android:icon="@drawable/ic_mic_black_24px"
+        android:orderInCategory="100" />

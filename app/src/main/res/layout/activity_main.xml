@@ -6,10 +6,20 @@
     android:layout_height="match_parent"
     tools:context="comquintonj.github.star.MainActivity">
 
-    <RelativeLayout
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="20dp">
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="200dp"
+        android:layout_marginTop="20dp" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="20dp">
 
         <Button
             android:id="@+id/inputButton"
@@ -25,9 +35,9 @@
             android:id="@+id/inputText"
             android:layout_width="283dp"
             android:layout_height="45dp"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="125dp"
             android:ems="10"
             android:hint="Text Input"
             android:inputType="textPersonName"
