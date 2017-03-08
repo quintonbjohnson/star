@@ -7,27 +7,30 @@
     tools:context="comquintonj.github.star.MainActivity">
 
     <ListView
+        android:id="@+id/chatView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="200dp"
-        android:layout_marginTop="20dp" />
+        android:background="@color/bg"
+        android:divider="@android:color/transparent" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="20dp">
+        android:layout_alignParentStart="true">
 
         <Button
             android:id="@+id/inputButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/inputText"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignTop="@+id/inputText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="15dp"
             android:layout_toEndOf="@+id/inputText"
-            android:text="Say"
+            android:background="@drawable/ic_sound_out"
             tools:layout_editor_absoluteX="291dp"
             tools:layout_editor_absoluteY="39dp" />
 
@@ -37,9 +40,14 @@
             android:layout_height="45dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
+            android:layout_alignWithParentIfMissing="false"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
             android:layout_marginBottom="125dp"
+            android:layout_marginLeft="35dp"
             android:ems="10"
-            android:hint="Text Input"
+            android:hint="Input text to be said here"
             android:inputType="textPersonName"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="39dp" />
