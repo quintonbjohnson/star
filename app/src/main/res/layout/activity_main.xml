@@ -6,14 +6,13 @@
     android:layout_height="match_parent"
     tools:context="comquintonj.github.star.MainActivity">
 
-    <ListView
-        android:id="@+id/chatView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="200dp"
-        android:background="@color/bg"
-        android:divider="@android:color/transparent" />
+    <LinearLayout
+        android:id="@+id/focusDummy"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
@@ -22,57 +21,74 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true">
 
-        <Button
-            android:id="@+id/inputButton"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_alignTop="@+id/inputText"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="15dp"
-            android:layout_toEndOf="@+id/inputText"
-            android:background="@drawable/ic_sound_out"
-            tools:layout_editor_absoluteX="291dp"
-            tools:layout_editor_absoluteY="39dp" />
-
-        <EditText
-            android:id="@+id/inputText"
-            android:layout_width="283dp"
-            android:layout_height="45dp"
-            android:layout_alignParentBottom="true"
+        <ListView
+            android:id="@+id/chatView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_alignParentStart="true"
-            android:layout_alignWithParentIfMissing="false"
-            android:layout_centerHorizontal="true"
-            android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="125dp"
-            android:layout_marginLeft="35dp"
-            android:ems="10"
-            android:hint="Input text to be said here"
-            android:inputType="textPersonName"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="39dp" />
+            android:layout_marginBottom="150dp"
+            android:background="@color/bg"
+            android:divider="@android:color/transparent" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_above="@+id/horizontalScrollView"
+            android:layout_marginBottom="10dp">
+
+            <Button
+                android:id="@+id/inputButton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/inputText"
+                android:layout_centerHorizontal="false"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/ic_sound_out"
+                tools:layout_editor_absoluteX="291dp"
+                tools:layout_editor_absoluteY="39dp" />
+
+            <EditText
+                android:id="@+id/inputText"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_above="@+id/horizontalScrollView"
+                android:layout_alignParentStart="true"
+                android:layout_alignWithParentIfMissing="false"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="60dp"
+                android:ems="10"
+                android:hint="Type a message to be said"
+                android:inputType="textPersonName"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="39dp" />
+        </RelativeLayout>
 
         <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:fillViewport="false"
             android:id="@+id/horizontalScrollView"
-            android:layout_marginTop="18dp"
+            android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:layout_below="@+id/inputButton"
-            android:layout_alignParentStart="true">
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="15dp"
+            android:fillViewport="false">
 
             <LinearLayout
                 android:id="@+id/presetValues"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
+
                 <Button
                     android:id="@+id/test"
-                    android:text="test"
-                    android:onClick="presetClicked"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right" />
+                    android:layout_gravity="right"
+                    android:background="@drawable/roundedshapebtn"
+                    android:elevation="2dp"
+                    android:onClick="presetClicked"
+                    android:text="test"
+                    android:textColor="@color/white" />
             </LinearLayout>
 
         </HorizontalScrollView>

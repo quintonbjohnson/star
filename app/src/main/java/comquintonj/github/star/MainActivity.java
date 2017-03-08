@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Instantiate view
-        setTitle("Chat");
         inputText = (EditText) findViewById(R.id.inputText);
         Button inputButton = (Button) findViewById(R.id.inputButton);
         chatList = (ListView) findViewById(R.id.chatView);
@@ -155,6 +154,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.microphone:
                 displaySpeechRecognizer();
                 //test
+                return true;
+            case R.id.clear:
+                recreate();
+                return true;
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.

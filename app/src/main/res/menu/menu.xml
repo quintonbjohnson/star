@@ -6,8 +6,12 @@
 
 
     <item
+        android:id="@+id/clear"
+        android:title="CLEAR"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/microphone"
         android:icon="@drawable/ic_mic_black_24px"
-        android:title="Item"
-        app:showAsAction="ifRoom" />
+        android:title="mic"
+        app:showAsAction="always" />
 </menu>
