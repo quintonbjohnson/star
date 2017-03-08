@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         DrawableCompat.setTint(inputButton.getBackground(),
                 ContextCompat.getColor(this, R.color.colorAccent));
 
+        // Adding adapter to ListView
         chatAdapter = new ChatViewAdapter(getApplicationContext(), R.layout.right);
         chatList.setAdapter(chatAdapter);
 
