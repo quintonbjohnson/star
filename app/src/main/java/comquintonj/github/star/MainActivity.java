@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText inputText;
     private LinearLayout presetValues;
     private static final int SPEECH_REQUEST_CODE = 0;
+    private int id = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,24 +79,27 @@ public class MainActivity extends AppCompatActivity {
         addPreset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                id++;
                 String buttonName = inputText.getText().toString();
                 boolean flag = !buttonName.isEmpty();
                 if (flag) {
                     Drawable d = getResources().getDrawable(R.drawable.roundedshapebtn);
                     Button newButton = new Button(getApplicationContext());
-//                    newButton.setId;
+                    newButton.setId(id);
                     newButton.setText(buttonName);
                     newButton.setBackground(d);
                     newButton.setTextColor(getApplication().getResources().getColor(R.color.white));
-//                    newButton.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            presetClicked(v);
-//                        }
-//                    });
+                    newButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            System.out.println(v.getId());
+                            presetClicked(v);
+                        }
+                    });
 
                     LinearLayout.LayoutParams ll = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     presetValue.addView(newButton, ll);
+
                 }
 
             }
