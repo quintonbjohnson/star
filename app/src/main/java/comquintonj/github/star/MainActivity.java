@@ -3,6 +3,7 @@ package comquintonj.github.star;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -12,6 +13,7 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -79,8 +81,18 @@ public class MainActivity extends AppCompatActivity {
                 String buttonName = inputText.getText().toString();
                 boolean flag = !buttonName.isEmpty();
                 if (flag) {
+                    Drawable d = getResources().getDrawable(R.drawable.roundedshapebtn);
                     Button newButton = new Button(getApplicationContext());
+//                    newButton.setId;
                     newButton.setText(buttonName);
+                    newButton.setBackground(d);
+                    newButton.setTextColor(getApplication().getResources().getColor(R.color.white));
+//                    newButton.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            presetClicked(v);
+//                        }
+//                    });
 
                     LinearLayout.LayoutParams ll = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     presetValue.addView(newButton, ll);
@@ -88,6 +100,16 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+//        android:layout_width="wrap_content"
+//        android:layout_height="wrap_content"
+//        android:layout_gravity="right"
+//        android:layout_marginRight="10dp"
+//        android:background="@drawable/roundedshapebtn"
+//        android:elevation="2dp"
+//        android:onClick="presetClicked"
+//        android:text="No"
+//        android:textColor="@color/white"
 
         // Set scrolling adapter for the ListView holding chats
         chatList.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
