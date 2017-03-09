@@ -18,8 +18,9 @@
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
+        android:layout_marginLeft="15dp"
+        android:layout_below="@+id/focusDummy"
+        android:layout_centerHorizontal="true">
 
         <ListView
             android:id="@+id/chatView"
@@ -48,11 +49,20 @@
                 tools:layout_editor_absoluteX="291dp"
                 tools:layout_editor_absoluteY="39dp" />
 
+            <Button
+                android:id="@+id/addPreset"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@android:drawable/ic_menu_add"
+                android:layout_alignTop="@+id/inputText"
+                android:layout_marginLeft="15dp"
+                tools:layout_editor_absoluteX="291dp"
+                tools:layout_editor_absoluteY="39dp"
+                android:layout_alignParentStart="true" />
+
             <EditText
                 android:id="@+id/inputText"
-                android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:layout_alignParentStart="true"
                 android:layout_alignWithParentIfMissing="false"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="60dp"
@@ -60,7 +70,10 @@
                 android:hint="Type a message to be said"
                 android:inputType="textPersonName"
                 tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="39dp" />
+                tools:layout_editor_absoluteY="39dp"
+                android:layout_width="245dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
         </RelativeLayout>
 
         <HorizontalScrollView

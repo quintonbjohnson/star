@@ -9,13 +9,17 @@ import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.util.List;
@@ -30,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView chatList;
     private TextToSpeech textToSpeech;
     private EditText inputText;
+    private LinearLayout presetValues;
     private static final int SPEECH_REQUEST_CODE = 0;
 
     @Override
@@ -40,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         // Instantiate view
         inputText = (EditText) findViewById(R.id.inputText);
         Button inputButton = (Button) findViewById(R.id.inputButton);
+        Button addPreset = (Button) findViewById(R.id.addPreset);
+        final LinearLayout presetValue = (LinearLayout) findViewById(R.id.presetValues);
         chatList = (ListView) findViewById(R.id.chatView);
         DrawableCompat.setTint(inputButton.getBackground(),
                 ContextCompat.getColor(this, R.color.colorAccent));
@@ -63,6 +70,22 @@ public class MainActivity extends AppCompatActivity {
                 String toSpeak = inputText.getText().toString();
                 sayIt(toSpeak);
                 sendMessage(toSpeak, true);
+            }
+        });
+
+        addPreset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String buttonName = inputText.getText().toString();
+                boolean flag = !buttonName.isEmpty();
+                if (flag) {
+                    Button newButton = new Button(getApplicationContext());
+                    newButton.setText(buttonName);
+
+                    LinearLayout.LayoutParams ll = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    presetValue.addView(newButton, ll);
+                }
+
             }
         });
 
