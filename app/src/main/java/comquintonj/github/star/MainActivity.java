@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
     private ListView chatList;
     private TextToSpeech textToSpeech;
     private EditText inputText;
-    private LinearLayout presetValues;
     private static final int SPEECH_REQUEST_CODE = 0;
     private int id = 0;
 
@@ -76,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // If a user has decided to add a new preset button
         addPreset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,12 +92,12 @@ public class MainActivity extends AppCompatActivity {
                     newButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            System.out.println(v.getId());
                             presetClicked(v);
                         }
                     });
 
-                    LinearLayout.LayoutParams ll = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    LinearLayout.LayoutParams ll = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    ll.setMargins(0, 0, 20, 0);
                     presetValue.addView(newButton, ll);
 
                 }
