@@ -192,6 +192,16 @@ public class MainActivity extends AppCompatActivity {
         presetValue.addView(newButton, customValues);
     }
 
+    /**
+     * Sets text in preset button as input text
+     * @param v the Button that was clicked
+     */
+    public void presetHelp(View v){
+        Button presetButton = (Button) findViewById(v.getId());
+        String toSpeak = presetButton.getText().toString();
+        inputText.setText(toSpeak);
+    }
+
 
     /**
      * On result of the Google Speech Recognizer, use the input to transmit to the user
