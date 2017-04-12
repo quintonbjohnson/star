@@ -96,9 +96,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
 
-                    LinearLayout.LayoutParams presetValues = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    presetValues.setMargins(0, 0, 15, 0);
-                    presetValue.addView(newButton, presetValues);
+                    LinearLayout.LayoutParams customValues = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    customValues.setMargins(0, 0, 15, 0);
+                    presetValue.addView(newButton, customValues);
 
                 }
 
