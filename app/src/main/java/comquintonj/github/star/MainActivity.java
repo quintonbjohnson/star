@@ -10,20 +10,19 @@ import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,22 +32,29 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     private ChatViewAdapter chatAdapter;
+    private HashMap<String, String> customPresets = new HashMap<>();
     private ListView chatList;
     private TextToSpeech textToSpeech;
     private EditText inputText;
     private static final int SPEECH_REQUEST_CODE = 0;
     private int id = 0;
+    private SQLiteHelper dbhelp;
+    private Button addPresetButton;
+    private Button inputButton;
+    private LinearLayout presetValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        dbhelp = new SQLiteHelper(this);
+
         // Instantiate view
         inputText = (EditText) findViewById(R.id.inputText);
-        Button inputButton = (Button) findViewById(R.id.inputButton);
-        Button addPreset = (Button) findViewById(R.id.addPreset);
-        final LinearLayout presetValue = (LinearLayout) findViewById(R.id.presetValues);
+        inputButton = (Button) findViewById(R.id.inputButton);
+        addPresetButton = (Button) findViewById(R.id.addPreset);
+        presetValue = (LinearLayout) findViewById(R.id.presetValues);
         chatList = (ListView) findViewById(R.id.chatView);
         DrawableCompat.setTint(inputButton.getBackground(),
                 ContextCompat.getColor(this, R.color.colorAccent));
@@ -56,64 +62,6 @@ public class MainActivity extends AppCompatActivity {
         // Adding adapter to ListView
         chatAdapter = new ChatViewAdapter(getApplicationContext(), R.layout.right);
         chatList.setAdapter(chatAdapter);
-
-        // Instantiate TextToSpeech object
-        textToSpeech =new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                textToSpeech.setLanguage(Locale.ENGLISH);
-            }
-        });
-
-        // If a user has decided to dictate
-        inputButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String toSpeak = inputText.getText().toString();
-                sayIt(toSpeak);
-                sendMessage(toSpeak, true);
-            }
-        });
-
-        // If a user has decided to add a new preset button
-        addPreset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                id++;
-                String buttonName = inputText.getText().toString();
-                boolean flag = !buttonName.isEmpty();
-                if (flag) {
-                    Drawable d = getResources().getDrawable(R.drawable.roundedshapebtn);
-                    Button newButton = new Button(getApplicationContext());
-                    newButton.setId(id);
-                    newButton.setText(buttonName);
-                    newButton.setBackground(d);
-                    newButton.setTextColor(getApplication().getResources().getColor(R.color.white));
-                    newButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            presetClicked(v);
-                        }
-                    });
-
-                    LinearLayout.LayoutParams customValues = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    customValues.setMargins(0, 0, 15, 0);
-                    presetValue.addView(newButton, customValues);
-
-                }
-
-            }
-        });
-
-//        android:layout_width="wrap_content"
-//        android:layout_height="wrap_content"
-//        android:layout_gravity="right"
-//        android:layout_marginRight="10dp"
-//        android:background="@drawable/roundedshapebtn"
-//        android:elevation="2dp"
-//        android:onClick="presetClicked"
-//        android:text="No"
-//        android:textColor="@color/white"
 
         // Set scrolling adapter for the ListView holding chats
         chatList.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
@@ -127,6 +75,23 @@ public class MainActivity extends AppCompatActivity {
                 chatList.setSelection(chatAdapter.getCount() - 1);
             }
         });
+
+        // Instantiate TextToSpeech object
+        textToSpeech =new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                textToSpeech.setLanguage(Locale.ENGLISH);
+            }
+        });
+
+        // Set onClickListeners for buttons
+        addOnClickListeners();
+
+        // Add the custom presets from the SQLite database
+        ArrayList<String> customPreset = dbhelp.getPresets();
+        for (String preset : customPreset) {
+            addPreset(preset);
+        }
     }
 
     /**
@@ -169,6 +134,62 @@ public class MainActivity extends AppCompatActivity {
         String toSpeak = presetButton.getText().toString();
         sayIt(toSpeak);
         sendMessage(toSpeak, true);
+    }
+
+    /**
+     * Add on click listeners to buttons
+     */
+    private void addOnClickListeners() {
+        // If a user has decided to dictate
+        inputButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String toSpeak = inputText.getText().toString();
+                sayIt(toSpeak);
+                sendMessage(toSpeak, true);
+            }
+        });
+
+        // If a user has decided to add a custom preset
+        addPresetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String buttonName = inputText.getText().toString();
+                boolean flag = buttonName.isEmpty();
+                if (!flag) {
+                    addPreset(buttonName);
+                    Toast.makeText(MainActivity.this, "Preset added", Toast.LENGTH_SHORT).show();
+                    dbhelp.addPreset(buttonName);
+                }
+            }
+        });
+
+    }
+
+    /**
+     * Add a custom preset with the given text
+     * @param preset the text for the new preset
+     */
+    private void addPreset(String preset) {
+        id++;
+        Drawable d = getResources().getDrawable(R.drawable.roundedshapebtn);
+        Button newButton = new Button(getApplicationContext());
+        newButton.setId(id);
+        newButton.setText(preset);
+        newButton.setBackground(d);
+        newButton.setTextColor(getApplication().getResources().getColor(R.color.white));
+        newButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presetClicked(v);
+            }
+        });
+
+        LinearLayout.LayoutParams customValues =
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+        customValues.setMargins(0, 0, 15, 0);
+        presetValue.addView(newButton, customValues);
     }
 
 
