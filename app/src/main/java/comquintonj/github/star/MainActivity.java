@@ -163,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     /**
@@ -181,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
         newButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presetClicked(v);
+                presetHelp(v);
             }
         });
 
