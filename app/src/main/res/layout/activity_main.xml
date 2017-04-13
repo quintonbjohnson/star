@@ -94,7 +94,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/yes"
+                    android:id="@+id/preset1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
@@ -107,7 +107,7 @@
                     android:textSize="14sp" />
 
                 <Button
-                    android:id="@+id/no"
+                    android:id="@+id/preset2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
@@ -119,8 +119,8 @@
                     android:textColor="@color/white" />
 
                 <Button
-                    android:id="@+id/thank"
-                    android:layout_width="100dp"
+                    android:id="@+id/preset3"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_marginRight="10dp"
@@ -156,7 +156,7 @@
 
                 <Button
                     android:id="@+id/please"
-                    android:layout_width="190dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_marginRight="10dp"

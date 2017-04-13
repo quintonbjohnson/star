@@ -1,13 +1,17 @@
 package comquintonj.github.star;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.DataSetObserver;
+import android.support.design.widget.Snackbar;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -42,6 +46,12 @@ public class MainActivity extends AppCompatActivity {
     private Button addPresetButton;
     private Button inputButton;
     private LinearLayout presetValue;
+    private Snackbar snackbar;
+
+    /**
+     * Used to access permission request
+     */
+    public static final int PERMISSIONS_SINGLE_REQUEST = 12;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
         chatList = (ListView) findViewById(R.id.chatView);
         DrawableCompat.setTint(inputButton.getBackground(),
                 ContextCompat.getColor(this, R.color.colorAccent));
+
+        // Check location permission for predictive text
+        checkPermission();
 
         // Adding adapter to ListView
         chatAdapter = new ChatViewAdapter(getApplicationContext(), R.layout.right);
@@ -201,6 +214,52 @@ public class MainActivity extends AppCompatActivity {
         inputText.setText(toSpeak);
     }
 
+    /**
+     * Check to see if the user has allowed permissions for reading storage and accessing location.
+     */
+    public void checkPermission() {
+        if (ContextCompat
+                .checkSelfPermission(this,
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale
+                            (this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                Snackbar.make(this.findViewById(android.R.id.content),
+                        "Granting permissions will allow you to get predictive responses" +
+                                "based on location",
+                        Snackbar.LENGTH_INDEFINITE).setAction("ENABLE",
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                requestPermissions(
+                                        new String[]{ Manifest.permission.ACCESS_FINE_LOCATION },
+                                        PERMISSIONS_SINGLE_REQUEST);
+                            }
+                        }).show();
+            } else {
+                requestPermissions(
+                        new String[]{ Manifest.permission.ACCESS_FINE_LOCATION },
+                        PERMISSIONS_SINGLE_REQUEST);
+            }
+        }
+    }
+
+    /**
+     * Check to see if the user has given permission to read external storage
+     *
+     * @return whether or not the user has given permission
+     */
+    public boolean checkLocationPermission() {
+        int result = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     /**
      * On result of the Google Speech Recognizer, use the input to transmit to the user
