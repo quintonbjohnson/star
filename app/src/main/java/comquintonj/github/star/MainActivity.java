@@ -2,9 +2,12 @@ package comquintonj.github.star;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.DataSetObserver;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -23,7 +26,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceDetectionApi;
+import com.google.android.gms.location.places.PlaceLikelihood;
+import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
+import com.google.android.gms.location.places.Places;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +48,8 @@ import java.util.Locale;
 /**
  * MainActivity that displays on startup
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private ChatViewAdapter chatAdapter;
     private HashMap<String, String> customPresets = new HashMap<>();
@@ -47,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
     private Button inputButton;
     private LinearLayout presetValue;
     private Snackbar snackbar;
+    private GoogleApiClient mGoogleApiClient;
+    private Context context;
 
     /**
      * Used to access permission request
@@ -57,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = this;
 
         dbhelp = new SQLiteHelper(this);
 
@@ -105,6 +124,24 @@ public class MainActivity extends AppCompatActivity {
         for (String preset : customPreset) {
             addPreset(preset);
         }
+        buildGoogleApiClient();
+        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
+                .getCurrentPlace(mGoogleApiClient, null);
+
+        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
+            @Override
+            public void onResult(@NonNull PlaceLikelihoodBuffer placeLikelihoods) {
+                if (placeLikelihoods.getCount() <= 0) {
+                    Toast.makeText(context, "No nearby locations", Toast.LENGTH_SHORT).show();
+                } else {
+                    for (PlaceLikelihood placeLikelihood : placeLikelihoods) {
+                        Toast.makeText(context, placeLikelihood.getPlace().getName(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+                placeLikelihoods.release();
+            }
+        });
     }
 
     /**
@@ -261,6 +298,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(LocationServices.API)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                    @Override
+                    public void onConnected(@Nullable Bundle bundle) {
+                        Toast.makeText(context, "Connected", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onConnectionSuspended(int i) {
+                        Toast.makeText(context, "Connection Suspended", Toast.LENGTH_SHORT).show();
+
+                    }
+                })
+                .addOnConnectionFailedListener(this)
+                .build();
+    }
+
     /**
      * On result of the Google Speech Recognizer, use the input to transmit to the user
      * @param requestCode the request code to decide which intent the activity came from
@@ -314,4 +373,33 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Toast.makeText(this, "onConnectionFailed", Toast.LENGTH_LONG).show();
+    }
 }
+
