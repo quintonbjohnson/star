@@ -23,7 +23,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -36,13 +35,11 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -52,27 +49,85 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private ChatViewAdapter chatAdapter;
-    private ListView chatList;
-    private TextToSpeech textToSpeech;
-    private EditText inputText;
-    private static final int SPEECH_REQUEST_CODE = 0;
-    private int id = 0;
-    private SQLiteHelper dbhelp;
+    /**
+     * Button to add custom presets
+     */
     private Button addPresetButton;
+
+    /**
+     * Button to say the input
+     */
     private Button inputButton;
+
+    /**
+     * The first preset button that can be used to change to location responses
+     */
     private Button preset1;
+
+    /**
+     * The second preset button that can be used to change to location responses
+     */
     private Button preset2;
+
+    /**
+     * The third preset button that can be used to change to location responses
+     */
     private Button preset3;
-    private LinearLayout presetValue;
-    private GoogleApiClient mGoogleApiClient;
+
+    /**
+     * Adapter to set message chat view content
+     */
+    private ChatViewAdapter chatAdapter;
+
+    /**
+     * Current context of the application
+     */
     private Context context;
 
+    /**
+     * The input text to be read
+     */
+    private EditText inputText;
+
+    /**
+     * The API Client used to connect to Google Places
+     */
+    private GoogleApiClient mGoogleApiClient;
+
+    /**
+     * Int to keep track of the current preset id
+     */
+    private int id = 0;
 
     /**
      * Used to access permission request
      */
     public static final int PERMISSIONS_SINGLE_REQUEST = 12;
+
+    /**
+     * Keeps track of request code for the speech recognizer intent
+     */
+    private static final int SPEECH_REQUEST_CODE = 0;
+
+    /**
+     * Lineary layout for the presets
+     */
+    private LinearLayout presetValue;
+
+    /**
+     * The ListView for the messages
+     */
+    private ListView chatList;
+
+    /**
+     * The database to store custom presets
+     */
+    private SQLiteHelper dbhelp;
+
+    /**
+     * The TextToSpeech object used to read aloud input
+     */
+    private TextToSpeech textToSpeech;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +137,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         // Create SQLite database
         dbhelp = new SQLiteHelper(this);
-
-        // Create an ArrayAdapter that will contain all list items
-        ArrayAdapter<String> adapter;
 
         // Instantiate view
         inputText = (EditText) findViewById(R.id.inputText);
@@ -151,7 +203,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         // If there are no places found nearby
                         Toast.makeText(context, "No nearby locations", Toast.LENGTH_SHORT).show();
                     } else {
-
                         setLocationPreset(placeLikelihoods.get(0).getPlace());
                     }
                     placeLikelihoods.release();
@@ -443,6 +494,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 preset2.setText(R.string.pharmacy2);
                 preset3.setText(R.string.pharmacy3);
                 break;
+            case "TYPE_RESTAURANT":
+                preset1.setText(R.string.restaurant1);
+                preset2.setText(R.string.restaurant2);
+                preset3.setText(R.string.restaurant3);
+                break;
             case "TYPE_UNIVERSITY":
                 preset1.setText(R.string.university1);
                 preset1.setOnClickListener(new View.OnClickListener() {
@@ -511,28 +567,43 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
     }
 
+    /**
+     * Called when the API client starts
+     */
     @Override
     protected void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
     }
 
+    /**
+     * Called when the API client stops
+     */
     @Override
     protected void onStop() {
         mGoogleApiClient.disconnect();
         super.onStop();
     }
 
+    /**
+     * Called when the API client connects
+     */
     @Override
     public void onConnected(Bundle bundle) {
 
     }
 
+    /**
+     * Called when the API client disconnects
+     */
     @Override
     public void onConnectionSuspended(int i) {
         Toast.makeText(context, "Connection to location suspended", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Called when the API client connection fails
+     */
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Toast.makeText(this, "Connection to location failed", Toast.LENGTH_LONG).show();

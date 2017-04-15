@@ -29,6 +29,10 @@
     <string name="pharmacy2">What are the side effects?</string>
     <string name="pharmacy3">How should this be taken?</string>
 
+    <string name="restaurant1">What are the specials for today?</string>
+    <string name="restaurant2">What would you recommend?</string>
+    <string name="restaurant3">Can I see a menu?</string>
+
     <string name="university1">Where can I find</string>
     <string name="university2">When is this due?</string>
     <string name="university3">What is the easiest way to get to</string>
