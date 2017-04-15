@@ -44,6 +44,7 @@
                 android:layout_alignTop="@+id/inputText"
                 android:layout_centerHorizontal="false"
                 android:layout_marginRight="15dp"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/ic_sound_out"
                 tools:layout_editor_absoluteX="291dp"
                 tools:layout_editor_absoluteY="39dp" />
@@ -55,19 +56,20 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignTop="@+id/inputText"
                 android:layout_marginLeft="15dp"
-                android:background="@android:drawable/ic_menu_add"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/ic_plus_circle"
                 tools:layout_editor_absoluteX="291dp"
                 tools:layout_editor_absoluteY="39dp" />
 
             <EditText
                 android:id="@+id/inputText"
-                android:layout_width="245dp"
+                android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignWithParentIfMissing="false"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="60dp"
+                android:layout_toEndOf="@+id/addPreset"
                 android:ems="10"
                 android:hint="Type a message to be said"
                 android:inputType="textPersonName"
@@ -81,8 +83,8 @@
             android:layout_height="80dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
             android:fillViewport="false">
 
             <LinearLayout
@@ -102,6 +104,8 @@
                     android:background="@drawable/roundedshapebtn"
                     android:elevation="2dp"
                     android:onClick="presetClicked"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
                     android:text="Yes"
                     android:textColor="@color/white"
                     android:textSize="14sp" />
@@ -115,6 +119,8 @@
                     android:background="@drawable/roundedshapebtn"
                     android:elevation="2dp"
                     android:onClick="presetClicked"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
                     android:text="No"
                     android:textColor="@color/white" />
 
@@ -127,6 +133,8 @@
                     android:background="@drawable/roundedshapebtn"
                     android:elevation="2dp"
                     android:onClick="presetClicked"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
                     android:text="Thank you"
                     android:textColor="@color/white" />
 
@@ -163,6 +171,8 @@
                     android:background="@drawable/roundedshapebtn"
                     android:elevation="2dp"
                     android:onClick="presetClicked"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
                     android:text="Please say that again"
                     android:textColor="@color/white" />
 

@@ -1,3 +1,35 @@
 <resources>
     <string name="app_name">STAR</string>
+
+    <string name="airport1">Can you help me find</string>
+    <string name="airport2">How long until the flight departs?</string>
+    <string name="airport3">How long until the flight lands?</string>
+
+    <string name="bank1">Can you help me open an account?</string>
+    <string name="bank2">I would like to withdraw</string>
+    <string name="bank3">I would like to deposit</string>
+
+    <string name="bar1">Can I get a</string>
+    <string name="bar2">Can you call me a taxi?</string>
+    <string name="bar3">What are the specials for today?</string>
+
+    <string name="cafe1">Can I get a</string>
+    <string name="cafe2">What are your favorite pastries?</string>
+    <string name="cafe3">What coffee beans do you recommend?</string>
+
+    <string name="doctor1">I am feeling</string>
+    <string name="doctor2">How can I prevent this in the future?</string>
+    <string name="doctor3">Do you recommend taking any medication?</string>
+
+    <string name="grocery1">Where can I find</string>
+    <string name="grocery2">I am paying with</string>
+    <string name="grocery3">I brought my own bags</string>
+
+    <string name="pharmacy1">What is the appropriate dosage?</string>
+    <string name="pharmacy2">What are the side effects?</string>
+    <string name="pharmacy3">How should this be taken?</string>
+
+    <string name="university1">Where can I find</string>
+    <string name="university2">When is this due?</string>
+    <string name="university3">What is the easiest way to get to</string>
 </resources>

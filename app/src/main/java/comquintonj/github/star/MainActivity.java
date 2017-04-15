@@ -6,27 +6,28 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.DataSetObserver;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -35,13 +36,13 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceDetectionApi;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -52,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         GoogleApiClient.OnConnectionFailedListener {
 
     private ChatViewAdapter chatAdapter;
-    private HashMap<String, String> customPresets = new HashMap<>();
     private ListView chatList;
     private TextToSpeech textToSpeech;
     private EditText inputText;
@@ -61,10 +61,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private SQLiteHelper dbhelp;
     private Button addPresetButton;
     private Button inputButton;
+    private Button preset1;
+    private Button preset2;
+    private Button preset3;
     private LinearLayout presetValue;
-    private Snackbar snackbar;
     private GoogleApiClient mGoogleApiClient;
     private Context context;
+
 
     /**
      * Used to access permission request
@@ -77,7 +80,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         setContentView(R.layout.activity_main);
         context = this;
 
+        // Create SQLite database
         dbhelp = new SQLiteHelper(this);
+
+        // Create an ArrayAdapter that will contain all list items
+        ArrayAdapter<String> adapter;
 
         // Instantiate view
         inputText = (EditText) findViewById(R.id.inputText);
@@ -85,7 +92,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         addPresetButton = (Button) findViewById(R.id.addPreset);
         presetValue = (LinearLayout) findViewById(R.id.presetValues);
         chatList = (ListView) findViewById(R.id.chatView);
+        preset1 = (Button) findViewById(R.id.preset1);
+        preset2 = (Button) findViewById(R.id.preset2);
+        preset3 = (Button) findViewById(R.id.preset3);
         DrawableCompat.setTint(inputButton.getBackground(),
+                ContextCompat.getColor(this, R.color.colorAccent));
+        DrawableCompat.setTint(addPresetButton.getBackground(),
                 ContextCompat.getColor(this, R.color.colorAccent));
 
         // Check location permission for predictive text
@@ -124,24 +136,28 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         for (String preset : customPreset) {
             addPreset(preset);
         }
-        buildGoogleApiClient();
-        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
-                .getCurrentPlace(mGoogleApiClient, null);
 
-        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
-            @Override
-            public void onResult(@NonNull PlaceLikelihoodBuffer placeLikelihoods) {
-                if (placeLikelihoods.getCount() <= 0) {
-                    Toast.makeText(context, "No nearby locations", Toast.LENGTH_SHORT).show();
-                } else {
-                    for (PlaceLikelihood placeLikelihood : placeLikelihoods) {
-                        Toast.makeText(context, placeLikelihood.getPlace().getName(),
-                                Toast.LENGTH_SHORT).show();
+        // Build Client to connect to Google Places
+        buildGoogleApiClient();
+        if (checkLocationPermission()) {
+            // Get result back from Google Places to retrieve nearby places
+            PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
+                    .getCurrentPlace(mGoogleApiClient, null);
+
+            result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
+                @Override
+                public void onResult(@NonNull PlaceLikelihoodBuffer placeLikelihoods) {
+                    if (placeLikelihoods.getCount() <= 0) {
+                        // If there are no places found nearby
+                        Toast.makeText(context, "No nearby locations", Toast.LENGTH_SHORT).show();
+                    } else {
+
+                        setLocationPreset(placeLikelihoods.get(0).getPlace());
                     }
+                    placeLikelihoods.release();
                 }
-                placeLikelihoods.release();
-            }
-        });
+            });
+        }
     }
 
     /**
@@ -220,13 +236,23 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
      * @param preset the text for the new preset
      */
     private void addPreset(String preset) {
+        // Increment ID for new preset button
         id++;
+
+        // Create and set the style of the new button
         Drawable d = getResources().getDrawable(R.drawable.roundedshapebtn);
         Button newButton = new Button(getApplicationContext());
         newButton.setId(id);
         newButton.setText(preset);
         newButton.setBackground(d);
+        newButton.setPadding(20, 0, 20, 0);
         newButton.setTextColor(getApplication().getResources().getColor(R.color.white));
+        LinearLayout.LayoutParams customValues =
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+        customValues.setMargins(0, 0, 15, 0);
+
+        // Add a click listener for the new button
         newButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -234,10 +260,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
         });
 
-        LinearLayout.LayoutParams customValues =
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-        customValues.setMargins(0, 0, 15, 0);
         presetValue.addView(newButton, customValues);
     }
 
@@ -245,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
      * Sets text in preset button as input text
      * @param v the Button that was clicked
      */
-    public void presetHelp(View v){
+    private void presetHelp(View v){
         Button presetButton = (Button) findViewById(v.getId());
         String toSpeak = presetButton.getText().toString();
         inputText.setText(toSpeak);
@@ -254,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     /**
      * Check to see if the user has allowed permissions for reading storage and accessing location.
      */
-    public void checkPermission() {
+    private void checkPermission() {
         if (ContextCompat
                 .checkSelfPermission(this,
                         Manifest.permission.ACCESS_FINE_LOCATION)
@@ -298,6 +320,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
     }
 
+    /**
+     * Build the API client for Google Places
+     */
     private synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
@@ -307,17 +332,129 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
-                        Toast.makeText(context, "Connected", Toast.LENGTH_SHORT).show();
+
                     }
 
                     @Override
                     public void onConnectionSuspended(int i) {
-                        Toast.makeText(context, "Connection Suspended", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Connection to location suspended",
+                                Toast.LENGTH_SHORT).show();
 
                     }
                 })
                 .addOnConnectionFailedListener(this)
                 .build();
+    }
+
+    /**
+     * Set Location presets based on the kind of place it is
+     * @param currentPlace the current place the user is located
+     */
+    private void setLocationPreset(Place currentPlace) {
+        // Get the list of types associated with the current place
+        List<Integer> listOfTypes = currentPlace.getPlaceTypes();
+
+        // Get the main type of the place
+        Integer mainTypeInt = listOfTypes.get(0);
+
+        // Retrieve the type of place in String format
+        Field[] fields = Place.class.getDeclaredFields();
+        String placeType = "";
+        for (Field field : fields) {
+            Class<?> type = field.getType();
+
+            if(type == int.class) {
+                try {
+                    if(mainTypeInt == field.getInt(null)) {
+                        Log.i("Testing", "onCreate: " + field.getName());
+                        placeType = field.getName();
+                        break;
+                    }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // Switch based on the type of place and give context aware predictions
+        switch (placeType) {
+            case "TYPE_AIRPORT":
+                preset1.setText(R.string.airport1);
+                preset1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        presetHelp(preset1);
+                    }
+                });
+                preset2.setText(R.string.airport2);
+                preset3.setText(R.string.airport3);
+                break;
+            case "TYPE_BANK":
+                preset1.setText(R.string.bank1);
+                preset2.setText(R.string.bank2);
+                preset3.setText(R.string.bank3);
+                break;
+            case "TYPE_BAR":
+                preset1.setText(R.string.bar1);
+                preset1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        presetHelp(preset1);
+                    }
+                });
+                preset2.setText(R.string.bar2);
+                preset3.setText(R.string.bar3);
+                break;
+            case "TYPE_CAFE":
+                preset1.setText(R.string.cafe1);
+                preset1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        presetHelp(preset1);
+                    }
+                });
+                preset2.setText(R.string.cafe2);
+                preset3.setText(R.string.cafe3);
+                break;
+            case "TYPE_DOCTOR":
+                preset1.setText(R.string.doctor1);
+                preset1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        presetHelp(preset1);
+                    }
+                });
+                preset2.setText(R.string.doctor2);
+                preset3.setText(R.string.doctor3);
+                break;
+            case "TYPE_GROCERY":
+                preset1.setText(R.string.grocery1);
+                preset1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        presetHelp(preset1);
+                    }
+                });
+                preset2.setText(R.string.grocery2);
+                preset3.setText(R.string.grocery3);
+                break;
+            case "TYPE_PHARMACY":
+                preset1.setText(R.string.pharmacy1);
+                preset2.setText(R.string.pharmacy2);
+                preset3.setText(R.string.pharmacy3);
+                break;
+            case "TYPE_UNIVERSITY":
+                preset1.setText(R.string.university1);
+                preset1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        presetHelp(preset1);
+                    }
+                });
+                preset2.setText(R.string.university2);
+                preset3.setText(R.string.university3);
+                break;
+        }
     }
 
     /**
@@ -389,17 +526,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public void onConnected(Bundle bundle) {
 
-
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        Toast.makeText(context, "Connection to location suspended", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Toast.makeText(this, "onConnectionFailed", Toast.LENGTH_LONG).show();
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Toast.makeText(this, "Connection to location failed", Toast.LENGTH_LONG).show();
     }
 }
 
