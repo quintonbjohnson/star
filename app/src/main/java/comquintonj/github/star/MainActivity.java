@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -162,6 +163,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         // Set scrolling adapter for the ListView holding chats
         chatList.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         chatList.setAdapter(chatAdapter);
+
+        chatList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            public boolean onItemLongClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+
+                Message o = (Message) chatList.getItemAtPosition(position);
+                sayIt(o.message);
+                return true;
+            }
+        });
 
         // Scroll the list view to bottom on data change
         chatAdapter.registerDataSetObserver(new DataSetObserver() {
