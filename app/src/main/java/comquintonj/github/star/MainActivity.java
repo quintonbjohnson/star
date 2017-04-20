@@ -36,8 +36,10 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -167,9 +169,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         chatList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-
-                Message o = (Message) chatList.getItemAtPosition(position);
-                sayIt(o.message);
+                Message repeatMessage = (Message) chatList.getItemAtPosition(position);
+                sayIt(repeatMessage.message);
+                sendMessage(repeatMessage.message, true);
                 return true;
             }
         });
@@ -451,11 +453,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 preset2.setText(R.string.airport2);
                 preset3.setText(R.string.airport3);
                 break;
+
             case "TYPE_BANK":
                 preset1.setText(R.string.bank1);
                 preset2.setText(R.string.bank2);
                 preset3.setText(R.string.bank3);
                 break;
+
             case "TYPE_BAR":
                 preset1.setText(R.string.bar1);
                 preset1.setOnClickListener(new View.OnClickListener() {
@@ -467,6 +471,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 preset2.setText(R.string.bar2);
                 preset3.setText(R.string.bar3);
                 break;
+
             case "TYPE_CAFE":
                 preset1.setText(R.string.cafe1);
                 preset1.setOnClickListener(new View.OnClickListener() {
@@ -478,6 +483,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 preset2.setText(R.string.cafe2);
                 preset3.setText(R.string.cafe3);
                 break;
+
             case "TYPE_DOCTOR":
                 preset1.setText(R.string.doctor1);
                 preset1.setOnClickListener(new View.OnClickListener() {
@@ -489,6 +495,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 preset2.setText(R.string.doctor2);
                 preset3.setText(R.string.doctor3);
                 break;
+
             case "TYPE_GROCERY":
                 preset1.setText(R.string.grocery1);
                 preset1.setOnClickListener(new View.OnClickListener() {
@@ -500,16 +507,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 preset2.setText(R.string.grocery2);
                 preset3.setText(R.string.grocery3);
                 break;
+
             case "TYPE_PHARMACY":
                 preset1.setText(R.string.pharmacy1);
                 preset2.setText(R.string.pharmacy2);
                 preset3.setText(R.string.pharmacy3);
                 break;
+
             case "TYPE_RESTAURANT":
                 preset1.setText(R.string.restaurant1);
                 preset2.setText(R.string.restaurant2);
                 preset3.setText(R.string.restaurant3);
                 break;
+
             case "TYPE_UNIVERSITY":
                 preset1.setText(R.string.university1);
                 preset1.setOnClickListener(new View.OnClickListener() {
