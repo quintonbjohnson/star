@@ -24,16 +24,187 @@
             android:id="@+id/chatView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
             android:background="@color/bg"
             android:divider="@android:color/transparent"
-            android:layout_above="@+id/relativeLayout2" />
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_above="@+id/horizontalScrollView" />
+
+
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_above="@+id/horizontalScrollView2"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_marginBottom="5dp"
+            android:fillViewport="false">
+
+            <LinearLayout
+                android:id="@+id/presetValues"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:dividerPadding="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/preset1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/roundedshapebtn"
+                    android:elevation="2dp"
+                    android:onClick="presetClicked"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="Where"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/preset2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/roundedshapebtn"
+                    android:elevation="2dp"
+                    android:onClick="presetClicked"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="When"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/preset3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/roundedshapebtn"
+                    android:elevation="2dp"
+                    android:onClick="presetClicked"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="Thank you"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollView2"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_above="@+id/relativeLayout2"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_marginBottom="5dp"
+            android:fillViewport="false">
+
+            <LinearLayout
+                android:id="@+id/presetValues2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:dividerPadding="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/yes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/roundedshapebtn"
+                    android:elevation="2dp"
+                    android:onClick="presetClicked"
+                    android:text="Yes"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/roundedshapebtn"
+                    android:elevation="2dp"
+                    android:onClick="presetClicked"
+                    android:text="No"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/where"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/roundedshapebtn"
+                    android:elevation="2dp"
+                    android:onClick="presetClicked"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="Where"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/when"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/roundedshapebtn"
+                    android:elevation="2dp"
+                    android:onClick="presetClicked"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="When"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/thankyou"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/roundedshapebtn"
+                    android:elevation="2dp"
+                    android:onClick="presetClicked"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="Thank you"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/please"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/roundedshapebtn"
+                    android:elevation="2dp"
+                    android:onClick="presetClicked"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="Please say that again"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_above="@+id/horizontalScrollView"
             android:layout_marginBottom="10dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
             android:id="@+id/relativeLayout2">
 
             <Button
@@ -77,108 +248,7 @@
                 tools:layout_editor_absoluteY="39dp" />
         </RelativeLayout>
 
-        <HorizontalScrollView
-            android:id="@+id/horizontalScrollView"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="3dp"
-            android:layout_marginRight="3dp"
-            android:fillViewport="false">
 
-            <LinearLayout
-                android:id="@+id/presetValues"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:dividerPadding="10dp"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/preset1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_marginRight="10dp"
-                    android:background="@drawable/roundedshapebtn"
-                    android:elevation="2dp"
-                    android:onClick="presetClicked"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:text="Yes"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
-
-                <Button
-                    android:id="@+id/preset2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_marginRight="10dp"
-                    android:background="@drawable/roundedshapebtn"
-                    android:elevation="2dp"
-                    android:onClick="presetClicked"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:text="No"
-                    android:textColor="@color/white" />
-
-                <Button
-                    android:id="@+id/preset3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_marginRight="10dp"
-                    android:background="@drawable/roundedshapebtn"
-                    android:elevation="2dp"
-                    android:onClick="presetClicked"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:text="Thank you"
-                    android:textColor="@color/white" />
-
-                <Button
-                    android:id="@+id/when"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_marginRight="10dp"
-                    android:background="@drawable/roundedshapebtn"
-                    android:elevation="2dp"
-                    android:onClick="presetClicked"
-                    android:text="When"
-                    android:textColor="@color/white" />
-
-                <Button
-                    android:id="@+id/where"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_marginRight="10dp"
-                    android:background="@drawable/roundedshapebtn"
-                    android:elevation="2dp"
-                    android:onClick="presetClicked"
-                    android:text="Where"
-                    android:textColor="@color/white" />
-
-                <Button
-                    android:id="@+id/please"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_marginRight="10dp"
-                    android:background="@drawable/roundedshapebtn"
-                    android:elevation="2dp"
-                    android:onClick="presetClicked"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:text="Please say that again"
-                    android:textColor="@color/white" />
-
-            </LinearLayout>
-
-        </HorizontalScrollView>
 
     </RelativeLayout>
 
