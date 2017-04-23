@@ -85,7 +85,7 @@ public class MessagesActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> parent, View view,
                                            int position, long id) {
                 String selected = pastSenders.get(position);
-                messagesDBHelp.clearPastMessages(messagesDBHelp, selected);
+                messagesDBHelp.clearAllPastMessages(messagesDBHelp, selected);
                 recreate();
                 return true;
             }
@@ -116,23 +116,21 @@ public class MessagesActivity extends AppCompatActivity {
             case R.id.add_message:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-                // Set up the input
+                // Set up the input for a new conversation
                 final EditText input = new EditText(this);
-                // Specify the type of input expected; this, for example, sets the input as
-                // a password, and will mask the text
+
                 LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getApplicationContext());
                 View mView = layoutInflaterAndroid.inflate(R.layout.user_input, null);
                 userInput = (EditText) mView.findViewById(R.id.user_input_text);
                 builder.setView(mView);
 
-                // Set up the buttons
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         newMessage = userInput.getText().toString();
                         Intent mainIntent = new Intent(MessagesActivity.this, MainActivity.class);
                         mainIntent.putExtra("Sender", newMessage);
-                        messagesDBHelp.addMessage(newMessage, "", "", "");
+                        messagesDBHelp.addMessage(newMessage, "First", "First", "First");
                         startActivity(mainIntent);
                     }
                 });

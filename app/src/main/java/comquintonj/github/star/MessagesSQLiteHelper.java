@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * A SQLite database helper to store messages
@@ -15,7 +14,7 @@ import java.util.HashMap;
 public class MessagesSQLiteHelper extends SQLiteOpenHelper {
 
     /**
-     * Version of the databse
+     * Version of the database
      */
     private static final int DATABASE_VERSION = 1;
 
@@ -199,10 +198,46 @@ public class MessagesSQLiteHelper extends SQLiteOpenHelper {
 
         try {
             while (cursor.moveToNext()) {
-                String foundSender =
-                        cursor.getString(cursor.getColumnIndexOrThrow(KEY_SENDER));
-                String to =
-                        cursor.getString(cursor.getColumnIndexOrThrow(KEY_TO));
+                String foundSender = cursor.getString(cursor.getColumnIndexOrThrow(KEY_SENDER));
+                String message = cursor.getString(cursor.getColumnIndexOrThrow(KEY_MESSAGE));
+                String to = cursor.getString(cursor.getColumnIndexOrThrow(KEY_TO));
+                if ((to.equals("User") && foundSender.equals(sender)) || to.equals(sender)) {
+                    String rowId = cursor.getString(cursor.getColumnIndex(KEY_SENDER));
+                    database.delete(TABLE_MESSAGES, KEY_SENDER + "=?", new String[]{rowId});
+                }
+            }
+        } finally {
+            cursor.close();
+        }
+
+        dbHelp.addMessage(sender, "First", "First", "First");
+    }
+
+    /**
+     * Clear all past messages from the specific sender and delete history of the conversation
+     * @param dbHelp the database to use
+     * @param sender the sender of the conversation
+     */
+    void clearAllPastMessages(MessagesSQLiteHelper dbHelp, String sender) {
+        ArrayList<Message> listOfMessages = new ArrayList<>();
+        SQLiteDatabase database = dbHelp.getReadableDatabase();
+
+        String whereClause = KEY_SENDER + "=?" + " OR "
+                + KEY_SENDER + "=?";
+
+        String[] whereArgs = new String[]{sender, "User"};
+
+        //Cursor for SQL Database
+        Cursor cursor = database.query(TABLE_MESSAGES,
+                new String[] {KEY_SENDER, KEY_MESSAGE, KEY_TO, KEY_FROM},
+                whereClause,
+                whereArgs,
+                null, null, null, null);
+
+        try {
+            while (cursor.moveToNext()) {
+                String foundSender = cursor.getString(cursor.getColumnIndexOrThrow(KEY_SENDER));
+                String to = cursor.getString(cursor.getColumnIndexOrThrow(KEY_TO));
 
                 if (to.equals(sender) || foundSender.equals(sender)) {
                     String rowId = cursor.getString(cursor.getColumnIndex(KEY_SENDER));

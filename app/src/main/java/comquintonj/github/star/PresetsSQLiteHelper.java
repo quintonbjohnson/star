@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class PresetsSQLiteHelper extends SQLiteOpenHelper {
 
     /**
-     * Version of the databse
+     * Version of the database
      */
     private static final int DATABASE_VERSION = 1;
 

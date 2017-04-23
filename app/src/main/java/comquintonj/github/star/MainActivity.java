@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 Message repeatMessage = (Message) chatList.getItemAtPosition(position);
                 sayIt(repeatMessage.message);
                 sendMessage(repeatMessage.message, true);
-                messagesDBHelp.addMessage("User", repeatMessage.message, "User", whoSent);
+                messagesDBHelp.addMessage("User", repeatMessage.message, whoSent, "User");
                 return true;
             }
         });
@@ -302,7 +302,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         Button presetButton = (Button) findViewById(v.getId());
         String toSpeak = presetButton.getText().toString();
         sayIt(toSpeak);
-        messagesDBHelp.addMessage("User", toSpeak, "User", whoSent);
+        messagesDBHelp.addMessage("User", toSpeak, whoSent, "User");
         sendMessage(toSpeak, true);
     }
 
@@ -315,9 +315,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public void onClick(View v) {
                 String toSpeak = inputText.getText().toString();
-                sayIt(toSpeak);
-                messagesDBHelp.addMessage("User", toSpeak, "User", whoSent);
-                sendMessage(toSpeak, true);
+                if (!(toSpeak.isEmpty())) {
+                    sayIt(toSpeak);
+                    messagesDBHelp.addMessage("User", toSpeak, whoSent, "User");
+                    sendMessage(toSpeak, true);
+                }
             }
         });
 
@@ -589,7 +591,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     RecognizerIntent.EXTRA_RESULTS);
             String spokenText = results.get(0);
             sendMessage(spokenText, false);
-            messagesDBHelp.addMessage(whoSent, spokenText, whoSent, "User");
+            messagesDBHelp.addMessage(whoSent, spokenText, "User", whoSent);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
