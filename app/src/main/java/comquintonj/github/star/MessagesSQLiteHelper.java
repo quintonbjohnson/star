@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * A SQLite database helper to store messages
@@ -127,6 +128,9 @@ public class MessagesSQLiteHelper extends SQLiteOpenHelper {
                 }
             } while (cursor.moveToNext());
         }
+
+        // Reverse to put newest first
+        Collections.reverse(senderList);
 
         return senderList;
     }
