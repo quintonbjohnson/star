@@ -1,15 +1,16 @@
 package comquintonj.github.star;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -58,6 +59,7 @@ public class MessagesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
+        final Context context = this;
 
         messagesDBHelp = new MessagesSQLiteHelper(this);
 
@@ -90,35 +92,15 @@ public class MessagesActivity extends AppCompatActivity {
                 return true;
             }
         });
-    }
 
-    /**
-     * Create the options menu found in the top right of the activity
-     * @param menu the menu to be added
-     * @return if the menu has been successfully added
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.addmenu, menu);
-        MenuItem addNewMessage = menu.findItem(R.id.add_message);
-        DrawableCompat.setTint(addNewMessage.getIcon(), ContextCompat.getColor(this, R.color.white));
-        return true;
-    }
-
-    /**
-     * When a user selects an option in the menu
-     * @param item the item the user has selected
-     * @return if the user has successfully used an item
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.add_message:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabButton);
+        DrawableCompat.setTint(fab.getDrawable(), ContextCompat.getColor(this, R.color.white));
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
                 // Set up the input for a new conversation
-                final EditText input = new EditText(this);
-
                 LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getApplicationContext());
                 View mView = layoutInflaterAndroid.inflate(R.layout.user_input, null);
                 userInput = (EditText) mView.findViewById(R.id.user_input_text);
@@ -142,12 +124,18 @@ public class MessagesActivity extends AppCompatActivity {
                 });
 
                 builder.show();
+            }
+        });
+    }
 
-                return true;
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-        }
+    /**
+     * Create the options menu found in the top right of the activity
+     * @param menu the menu to be added
+     * @return if the menu has been successfully added
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        return true;
     }
 }
