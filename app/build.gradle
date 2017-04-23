@@ -4,7 +4,7 @@ android {
     compileSdkVersion 23
     buildToolsVersion '25.0.0'
     defaultConfig {
-        applicationId "comquintonj.github.atlantastreetartproject"
+        applicationId "comquintonj.github.STAR"
         minSdkVersion 23
         targetSdkVersion 25
         versionCode 1
@@ -27,7 +27,8 @@ dependencies {
     })
     compile 'com.google.android.gms:play-services-location:10.0.0'
     compile 'com.google.android.gms:play-services-places:10.0.0'
-    testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.0.0'
     compile 'com.android.support:design:23.0.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
+    testCompile 'junit:junit:4.12'
 }

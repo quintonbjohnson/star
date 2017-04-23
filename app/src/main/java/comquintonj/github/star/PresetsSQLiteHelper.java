@@ -11,7 +11,7 @@ import java.util.ArrayList;
 /**
  * A SQLite database helper to store custom presets
  */
-public class SQLiteHelper extends SQLiteOpenHelper {
+public class PresetsSQLiteHelper extends SQLiteOpenHelper {
 
     /**
      * Version of the databse
@@ -44,7 +44,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
      * Constructor to create a database
      * @param context the context of the application
      */
-    public SQLiteHelper(Context context) {
+    public PresetsSQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

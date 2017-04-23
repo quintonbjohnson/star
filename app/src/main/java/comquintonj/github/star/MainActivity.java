@@ -36,10 +36,8 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -115,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     /**
      * Lineary layout for the presets
      */
-    private LinearLayout presetValue;
+    private LinearLayout presetValues;
 
     /**
      * The ListView for the messages
@@ -125,7 +123,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     /**
      * The database to store custom presets
      */
-    private SQLiteHelper dbhelp;
+    private PresetsSQLiteHelper presetsDBHelp;
+
+    /**
+     * The database to store messages
+     */
+    private MessagesSQLiteHelper messagesDBHelp;
+
+    /**
+     * Who the current chat is with
+     */
+    private String whoSent;
 
     /**
      * The TextToSpeech object used to read aloud input
@@ -138,14 +146,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         setContentView(R.layout.activity_main);
         context = this;
 
+        whoSent = getIntent().getExtras().getString("Sender");
+        setTitle(whoSent);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         // Create SQLite database
-        dbhelp = new SQLiteHelper(this);
+        presetsDBHelp = new PresetsSQLiteHelper(this);
+        messagesDBHelp = new MessagesSQLiteHelper(this);
 
         // Instantiate view
         inputText = (EditText) findViewById(R.id.inputText);
         inputButton = (Button) findViewById(R.id.inputButton);
         addPresetButton = (Button) findViewById(R.id.addPreset);
-        presetValue = (LinearLayout) findViewById(R.id.presetValues);
+        presetValues = (LinearLayout) findViewById(R.id.presetValues2);
         chatList = (ListView) findViewById(R.id.chatView);
         preset1 = (Button) findViewById(R.id.preset1);
         preset2 = (Button) findViewById(R.id.preset2);
@@ -172,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 Message repeatMessage = (Message) chatList.getItemAtPosition(position);
                 sayIt(repeatMessage.message);
                 sendMessage(repeatMessage.message, true);
+                messagesDBHelp.addMessage("User", repeatMessage.message, "User", whoSent);
                 return true;
             }
         });
@@ -185,6 +201,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
         });
 
+        // Add previous messages from this conversation
+        addPastMessages();
+
         // Instantiate TextToSpeech object
         textToSpeech =new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -197,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         addOnClickListeners();
 
         // Add the custom presets from the SQLite database
-        ArrayList<String> customPreset = dbhelp.getPresets();
+        ArrayList<String> customPreset = presetsDBHelp.getPresets();
         for (String preset : customPreset) {
             addPreset(preset);
         }
@@ -225,12 +244,32 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     /**
+     * Add past messages that have been in this conversation
+     */
+    private void addPastMessages() {
+        ArrayList<Message> retrievedMessages =
+                messagesDBHelp.getPastMessages(messagesDBHelp, whoSent);
+
+        if (retrievedMessages != null) {
+            for (Message item : retrievedMessages) {
+                if (!(item.message.equals(""))) {
+                    if (item.sender.equals("User")) {
+                        sendMessage(item.message, true);
+                    } else {
+                        sendMessage(item.message, false);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Show a message in the ListView of chats
      * @param spoken what has been said
-     * @param whoSent whether or not the user has sent the message
+     * @param isUser whether or not the user has sent the message
      */
-    private void sendMessage(String spoken, boolean whoSent) {
-        chatAdapter.add(new Message(whoSent, spoken));
+    private void sendMessage(String spoken, boolean isUser) {
+        chatAdapter.add(new Message(isUser, spoken));
         inputText.setText("");
     }
 
@@ -263,6 +302,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         Button presetButton = (Button) findViewById(v.getId());
         String toSpeak = presetButton.getText().toString();
         sayIt(toSpeak);
+        messagesDBHelp.addMessage("User", toSpeak, "User", whoSent);
         sendMessage(toSpeak, true);
     }
 
@@ -276,6 +316,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             public void onClick(View v) {
                 String toSpeak = inputText.getText().toString();
                 sayIt(toSpeak);
+                messagesDBHelp.addMessage("User", toSpeak, "User", whoSent);
                 sendMessage(toSpeak, true);
             }
         });
@@ -289,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 if (!flag) {
                     addPreset(buttonName);
                     Toast.makeText(MainActivity.this, "Preset added", Toast.LENGTH_SHORT).show();
-                    dbhelp.addPreset(buttonName);
+                    presetsDBHelp.addPreset(buttonName);
                 }
             }
         });
@@ -324,7 +365,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
         });
 
-        presetValue.addView(newButton, customValues);
+        presetValues.addView(newButton, customValues);
     }
 
     /**
@@ -548,7 +589,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     RecognizerIntent.EXTRA_RESULTS);
             String spokenText = results.get(0);
             sendMessage(spokenText, false);
-
+            messagesDBHelp.addMessage(whoSent, spokenText, whoSent, "User");
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -579,7 +620,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 //test
                 return true;
             case R.id.clear:
+                messagesDBHelp.clearPastMessages(messagesDBHelp, whoSent);
                 recreate();
+                return true;
+            case android.R.id.home:
+                // app icon in action bar clicked; go home
+                startActivity(new Intent(MainActivity.this, MessagesActivity.class));
                 return true;
             default:
                 // If we got here, the user's action was not recognized.
