@@ -1,6 +1,6 @@
 # STAR
 
-Speech-to-text Augmented Reality (STAR) is an Android application that hopes to provide text and speech capabilities to users with impaired hearing.
+Speech-to-text Augmented Reality (STAR) is an Android application that aims to provide text and speech capabilities to users with impaired hearing.
 
 <p align="center">
   <img src ="http://i.imgur.com/4MJ2hPn.png"/>
