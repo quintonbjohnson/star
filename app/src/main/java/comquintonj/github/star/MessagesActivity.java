@@ -130,7 +130,7 @@ public class MessagesActivity extends AppCompatActivity {
                         newMessage = userInput.getText().toString();
                         Intent mainIntent = new Intent(MessagesActivity.this, MainActivity.class);
                         mainIntent.putExtra("Sender", newMessage);
-                        messagesDBHelp.addMessage(newMessage, "First", "First", "First");
+                        messagesDBHelp.addMessage(newMessage, "First", "First");
                         startActivity(mainIntent);
                     }
                 });

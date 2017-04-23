@@ -45,19 +45,13 @@ public class MessagesSQLiteHelper extends SQLiteOpenHelper {
     private static final String KEY_TO = "toWho";
 
     /**
-     * Column name for text of message
-     */
-    private static final String KEY_FROM = "fromWho";
-
-    /**
      * String to create the table
      */
     private static final String TABLE_CREATE =
             "CREATE TABLE " + TABLE_MESSAGES + " ("
                     + KEY_SENDER + " TEXT, "
                     + KEY_MESSAGE + " TEXT, "
-                    + KEY_TO + " TEXT, "
-                    + KEY_FROM + " TEXT)";
+                    + KEY_TO + " TEXT)";
 
     /**
      * Constructor to create a database
@@ -93,14 +87,13 @@ public class MessagesSQLiteHelper extends SQLiteOpenHelper {
      * @param sender the sender of the mesage
      * @param message the text of the message
      */
-    void addMessage(String sender, String message, String to, String from) {
+    void addMessage(String sender, String message, String to) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(KEY_SENDER, sender);
         values.put(KEY_MESSAGE, message);
         values.put(KEY_TO, to);
-        values.put(KEY_FROM, from);
 
         // Insert a new row
         db.insert(TABLE_MESSAGES, null, values);
@@ -152,7 +145,7 @@ public class MessagesSQLiteHelper extends SQLiteOpenHelper {
 
         //Cursor for SQL Database
         Cursor cursor = database.query(TABLE_MESSAGES,
-                new String[] {KEY_SENDER, KEY_MESSAGE, KEY_TO, KEY_FROM},
+                new String[] {KEY_SENDER, KEY_MESSAGE, KEY_TO},
                 whereClause,
                 whereArgs,
                 null, null, null, null);
@@ -164,12 +157,11 @@ public class MessagesSQLiteHelper extends SQLiteOpenHelper {
                 String message =
                         cursor.getString(cursor.getColumnIndexOrThrow(KEY_MESSAGE));
                 String to = cursor.getString(cursor.getColumnIndexOrThrow(KEY_TO));
-                String from = cursor.getString(cursor.getColumnIndexOrThrow(KEY_FROM));
 
                 if (to.equals(sender)) {
-                    listOfMessages.add(new Message(foundSender, message, to, from));
-                } else if (from.equals(sender)) {
-                    listOfMessages.add(new Message(foundSender, message, to, from));
+                    listOfMessages.add(new Message(foundSender, message, to));
+                } else if (foundSender.equals(sender)) {
+                    listOfMessages.add(new Message(foundSender, message, to));
                 }
             }
         } finally {
@@ -195,7 +187,7 @@ public class MessagesSQLiteHelper extends SQLiteOpenHelper {
 
         //Cursor for SQL Database
         Cursor cursor = database.query(TABLE_MESSAGES,
-                new String[] {KEY_SENDER, KEY_MESSAGE, KEY_TO, KEY_FROM},
+                new String[] {KEY_SENDER, KEY_MESSAGE, KEY_TO},
                 whereClause,
                 whereArgs,
                 null, null, null, null);
@@ -205,16 +197,24 @@ public class MessagesSQLiteHelper extends SQLiteOpenHelper {
                 String foundSender = cursor.getString(cursor.getColumnIndexOrThrow(KEY_SENDER));
                 String message = cursor.getString(cursor.getColumnIndexOrThrow(KEY_MESSAGE));
                 String to = cursor.getString(cursor.getColumnIndexOrThrow(KEY_TO));
-                if ((to.equals("User") && foundSender.equals(sender)) || to.equals(sender)) {
+                if (foundSender.equals(sender)
+                        || foundSender.equals("User") && to.equals(sender)) {
                     String rowId = cursor.getString(cursor.getColumnIndex(KEY_SENDER));
-                    database.delete(TABLE_MESSAGES, KEY_SENDER + "=?", new String[]{rowId});
+                    if (rowId.equals("User")) {
+                        database.delete(TABLE_MESSAGES, KEY_SENDER + "=?" + " AND " + KEY_TO + "=?",
+                                new String[]{rowId, sender});
+                    } else{
+                        database.delete(TABLE_MESSAGES, KEY_SENDER + "=?",
+                                new String[]{sender});
+                    }
                 }
             }
         } finally {
             cursor.close();
         }
 
-        dbHelp.addMessage(sender, "First", "First", "First");
+        // Add a new message to the database to keep the conversation
+        dbHelp.addMessage(sender, "First", "First");
     }
 
     /**
@@ -233,7 +233,7 @@ public class MessagesSQLiteHelper extends SQLiteOpenHelper {
 
         //Cursor for SQL Database
         Cursor cursor = database.query(TABLE_MESSAGES,
-                new String[] {KEY_SENDER, KEY_MESSAGE, KEY_TO, KEY_FROM},
+                new String[] {KEY_SENDER, KEY_MESSAGE, KEY_TO},
                 whereClause,
                 whereArgs,
                 null, null, null, null);

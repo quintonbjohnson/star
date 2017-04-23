@@ -46,13 +46,11 @@ public class Message {
      * @param sender the sender of the message
      * @param message the text of the message
      * @param to who the message is sent to
-     * @param from who the message is sent from
      */
-    public Message(String sender, String message, String to, String from) {
+    public Message(String sender, String message, String to) {
         this.sender = sender;
         this.message = message;
         this.to = to;
-        this.from = from;
     }
 }
 
