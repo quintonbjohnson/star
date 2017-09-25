@@ -18,7 +18,7 @@ Current Version: 1.0
 
 ### Known Bugs
 * Once a conversation has been cleared, it goes to the top of the message list
-* New messages do not move a conversation to the top the message list
+* New messages do not move a conversation to the top of the message list
 
 ## Install Guide
 
